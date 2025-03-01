@@ -1,7 +1,9 @@
 {
     "name": "kyanag/query",
-    "version": "dev-master",
-
+    "description": "一个简单的，laravel风格的查询构造器",
+    "version": "1.0.0-dev",
+    "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Kyanag\\Query\\": "./src"
