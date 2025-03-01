@@ -1,0 +1,18 @@
+{
+    "name": "kyanag/query",
+    "version": "dev-master",
+
+    "autoload": {
+        "psr-4": {
+            "Kyanag\\Query\\": "./src"
+        },
+        "files": [
+            "./src/functions.php"
+        ]
+    },
+    "require": {
+        "php": ">=7.4",
+        "latitude/latitude": "^4.2",
+        "ext-pdo": "*"
+    }
+}
