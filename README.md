@@ -17,6 +17,30 @@ $pdo = new \PDO($dsn);
 $database = \Kyanag\Query\DatabaseFactory::create($pdo);
 ```
 
+### 基础
+```php
+//查询
+$records = $database->select("select * from users where id = ?", [1]);
+
+//执行
+$count = $database->exec("update users set status = ? where id = ?", [1, 2]);
+
+//事务
+$database->beginTransaction();
+try{
+    //do something
+    $database->commit();
+}catch (\Exception $e){
+    $database->rollback();
+}
+
+//闭包事务
+$retry = 3; //重试次数(默认不进行重试)
+$database->transaction(function(){
+    //do something
+}, $retry)
+```
+
 ### Where子句
 ```php
 $query = $database->query();
