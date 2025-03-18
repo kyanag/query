@@ -6,7 +6,5 @@ use Kyanag\Query\Adapters\Traits\HasWhereTrait;
 
 class SelectQuery
 {
-
     use HasWhereTrait;
-
 }

@@ -6,6 +6,8 @@ use Kyanag\Query\Adapters\Delete;
 use Kyanag\Query\Adapters\Insert;
 use Kyanag\Query\Adapters\Select;
 use Kyanag\Query\Adapters\Update;
+use Kyanag\Query\Interfaces\ConnectionInterface;
+use Kyanag\Query\Interfaces\QueryBuilderInterface;
 use Latitude\QueryBuilder\StatementInterface;
 
 /**
@@ -30,20 +32,13 @@ class QueryProxy
     protected $table = null;
 
 
-    public function __construct(QueryFactory $factory)
+    protected ConnectionInterface $connection;
+
+
+    public function __construct(QueryFactory $factory, ConnectionInterface $connection)
     {
         $this->queryFactory = $factory;
-    }
-
-    /**
-     * @param array $values
-     * @return mixed
-     * @throws \Exception
-     */
-    public function update(array $values)
-    {
-        $query = $this->makeQuery("update");
-        return $query->update($values);
+        $this->connection = $connection;
     }
 
 
@@ -56,14 +51,30 @@ class QueryProxy
 
     /**
      * @param ...$columns
-     * @return Select
+     * @return self
      * @throws \Exception
      */
-    public function select(...$columns)
+    public function select(...$columns): self
     {
-        $query = $this->makeQuery("select");
-        $query->select(...$columns);
-        return $query;
+        $this->callables[] = [
+            'select', $columns
+        ];
+        return $this;
+    }
+
+
+    /**
+     * 更新
+     * @param array $values
+     * @return int
+     * @throws \Exception
+     */
+    public function update(array $values): int
+    {
+        list($sql, $params) = $this->makeQuery("update")
+            ->update($values)
+            ->toSql();
+        return $this->connection->exec($sql, $params) ?: 0;
     }
 
     /**
@@ -71,8 +82,10 @@ class QueryProxy
      */
     public function get()
     {
-        $query = $this->makeQuery("select");
-        return $query->get();
+        list($sql, $params) = $this->makeQuery("select")
+            ->get()
+            ->toSql();
+        return $this->connection->select($sql, $params);
     }
 
 
@@ -82,9 +95,16 @@ class QueryProxy
      */
     public function first()
     {
-        $query = $this->makeQuery("select");
-        return $query->first();
+        list($sql, $params) = $this->makeQuery("select")
+            ->first()
+            ->toSql();
+        $items = $this->connection->select($sql, $params);
+        if (count($items) == 1) {
+            return $items[0];
+        }
+        return null;
     }
+
 
     /**
      * @param mixed $value
@@ -94,16 +114,31 @@ class QueryProxy
      */
     public function find($value, $field = "id")
     {
-        $query = $this->makeQuery("select");
-        return $query->where($field, $value)->first();
+        list($sql, $params) = $this->makeQuery("select")
+            ->find($value, $field)
+            ->toSql();
+
+        $items = $this->connection->select($sql, $params);
+        if (count($items) == 1) {
+            return $items[0];
+        }
+        return null;
     }
 
 
-    public function delete()
+    /**
+     * @return int
+     * @throws \Exception
+     */
+    public function delete(): int
     {
-        $query = $this->makeQuery("delete");
-        return $query->delete();
+        list($sql, $params) = $this->makeQuery("delete")
+            ->delete()
+            ->toSql();
+
+        return $this->connection->exec($sql, $params) ?: 0;
     }
+
 
     /**
      * @param array $values
@@ -112,17 +147,19 @@ class QueryProxy
      */
     public function insert(array $values)
     {
-        $query = $this->makeQuery("insert");
+        list($sql, $params) = $this->makeQuery("insert")
+            ->insert($values)
+            ->toSql();
 
-        $first = array_first($values);
-        $is_multi = is_array($first);
-        if($is_multi) {
-            return $query->insertAll($values);
-        }else{
-            return $query->insert($values);
-        }
+        return $this->connection->exec($sql, $params);
     }
 
+
+    /**
+     * @param $name
+     * @param $arguments
+     * @return $this
+     */
     public function __call($name, $arguments)
     {
         $this->callables[] = [$name, $arguments];
@@ -132,13 +169,13 @@ class QueryProxy
 
     /**
      * @param $type
-     * @param $use
-     * @return Delete|Insert|Select|Update
+     * @param bool $use
+     * @return QueryBuilderInterface
      * @throws \Exception
      */
-    protected function makeQuery($type, $use = true)
+    protected function makeQuery($type, bool $use = true): QueryBuilderInterface
     {
-        switch ($type){
+        switch ($type) {
             case "update":
                 $query = $this->queryFactory->createUpdate();
                 break;
@@ -154,11 +191,11 @@ class QueryProxy
             default:
                 throw new \Exception("query:{$type} exists!");
         }
-        if($this->table){
+        if ($this->table) {
             $query->table($this->table);
         }
-        if($use){
-            foreach ($this->callables as $callable){
+        if ($use) {
+            foreach ($this->callables as $callable) {
                 list($method, $args) = $callable;
                 $query = $query->{$method}(...$args) ?: $query;
             }

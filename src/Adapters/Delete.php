@@ -10,7 +10,6 @@ use Latitude\QueryBuilder\Query\SelectQuery;
 
 class Delete extends AbstractQuery
 {
-
     use HasWhereTrait;
 
 
@@ -24,9 +23,9 @@ class Delete extends AbstractQuery
 
     public function addCondition(CriteriaInterface $condition, $type = "and")
     {
-        if($type == "and"){
+        if ($type == "and") {
             $this->query->andWhere($condition);
-        }else{
+        } else {
             $this->query->orWhere($condition);
         }
     }
@@ -45,12 +44,9 @@ class Delete extends AbstractQuery
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function delete(): int
+
+    public function delete()
     {
-        $query = $this->query->compile();
-        return $this->connection->exec($query->sql(), $query->params()) ?: 0;
+        return $this;
     }
 }

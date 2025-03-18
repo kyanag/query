@@ -2,18 +2,11 @@
 
 namespace Kyanag\Query\Adapters;
 
-use Kyanag\Query\Connection;
-use Kyanag\Query\Interfaces\ConnectionInterface;
 use Latitude\QueryBuilder\Query\InsertQuery;
-
 
 class Insert extends AbstractQuery
 {
-
     protected InsertQuery $query;
-
-
-    protected ConnectionInterface $connection;
 
 
     public function __construct(InsertQuery $query)
@@ -29,28 +22,25 @@ class Insert extends AbstractQuery
         return $this;
     }
 
-    /**
-     * @param array $value
-     * @return bool
-     */
-    public function insert(array $value): bool
-    {
-        return $this->insertAll([$value]) >= 1;
-    }
 
     /**
      * @param array $values
-     * @return int
+     * @return $this
      */
-    public function insertAll(array $values): int
+    public function insert(array $values): self
     {
-        $maps = array_keys($values[0]);
-        $query = $this->query->columns(...$maps);
-
-        foreach ($values as $value){
-            $query->values(...array_values($value));
+        $first = array_first($values);
+        if (!is_array($first)) {
+            $values = [$values];
         }
-        $query = $query->compile();
-        return $this->connection->exec($query->sql(), $query->params());
+
+        $values = array_values($values);
+        $maps = array_keys($first);
+
+        $this->query->columns(...$maps);
+        foreach ($values as $value) {
+            $this->query->values(...array_values($value));
+        }
+        return $this;
     }
 }

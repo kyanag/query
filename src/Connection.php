@@ -6,7 +6,6 @@ use Kyanag\Query\Interfaces\ConnectionInterface;
 
 class Connection implements ConnectionInterface
 {
-
     protected array $queries = [];
 
     /**
@@ -81,15 +80,14 @@ class Connection implements ConnectionInterface
         $retry = max($retry, 1);
 
         $exception = null;
-        for($i = 0; $i < $retry; $i++)
-        {
+        for ($i = 0; $i < $retry; $i++) {
             $this->beginTransaction();
-            try{
+            try {
                 $res = call_user_func($callable, $this);
                 $this->commit();
 
                 return $res;
-            }catch (\Throwable $e){
+            } catch (\Throwable $e) {
                 $exception = $e;
                 $this->rollback();
             }
@@ -125,7 +123,7 @@ class Connection implements ConnectionInterface
 
     public function getLastQuery()
     {
-        if(count($this->queries)){
+        if (count($this->queries)) {
             return $this->queries[count($this->queries) - 1];
         }
         return null;

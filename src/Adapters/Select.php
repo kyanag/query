@@ -7,11 +7,11 @@ use Kyanag\Query\Adapters\Traits\HasOrderTrait;
 use Kyanag\Query\Adapters\Traits\HasWhereTrait;
 use Latitude\QueryBuilder\CriteriaInterface;
 use Latitude\QueryBuilder\Query\SelectQuery;
+
 use function Latitude\QueryBuilder\on;
 
 class Select extends AbstractQuery
 {
-
     use HasWhereTrait;
     use HasOrderTrait;
 
@@ -38,7 +38,7 @@ class Select extends AbstractQuery
 
     public function select(...$columns): self
     {
-        if(count($columns) > 1 && is_array($columns[0])){
+        if (count($columns) > 1 && is_array($columns[0])) {
             $columns = $columns[0];
         }
         $columns = array_map([$this, "_FormatField"], $columns);
@@ -54,7 +54,7 @@ class Select extends AbstractQuery
         $right_column = $this->_FormatField($right_column);
 
         $on = on($left_column, $right_column);
-        if(strtolower($type) == "join"){
+        if (strtolower($type) == "join") {
             $type = "";
         }
         $this->query->join($table, $on, $type);
@@ -109,7 +109,7 @@ class Select extends AbstractQuery
 
     public function having($field, $operator = null, $value = null, $type = "and")
     {
-        if($this->having === null){
+        if ($this->having === null) {
             $this->having = new WhereQuery();
         }
         $this->having->where($field, $operator, $value, $type);
@@ -126,7 +126,7 @@ class Select extends AbstractQuery
 
     public function havingRaw(string $raw, array $params = [])
     {
-        if($this->having === null){
+        if ($this->having === null) {
             $this->having = new WhereQuery();
         }
         $this->having->whereRaw($raw, $params);
@@ -136,54 +136,43 @@ class Select extends AbstractQuery
 
     public function addCondition(CriteriaInterface $condition, $type = "and")
     {
-        if($type == "and"){
+        if ($type == "and") {
             $this->query->andWhere($condition);
-        }else{
+        } else {
             $this->query->orWhere($condition);
         }
     }
 
-    /**
-     * @return mixed|null
-     */
-    public function first()
-    {
-        $this->query->limit(1);
-        $items = $this->get();
-        return count($items) > 0 ? $items[0] : null;
-    }
 
 
-    /**
-     * @param mixed $value
-     * @param string|array $field
-     * @return mixed
-     * @throws \Exception
-     */
-    public function find($value, $field = "id")
-    {
-        return $this->where($field, $value)->first();
-    }
-
-    /**
-     * @return array
-     */
-    public function get()
-    {
-        $query = $this->asQuery()->compile();
-        return $this->connection->select($query->sql(), $query->params());
-    }
-
-
-
-    public function asQuery()
+    public function toQuery()
     {
         /** @var SelectQuery $query */
-        $query = parent::asQuery();
-        if($this->having !== null && !$this->having->isEmpty())
-        {
+        $query = parent::toQuery();
+        if ($this->having !== null && !$this->having->isEmpty()) {
             $query = $query->having($this->having->toQuery());
         }
         return $query;
+    }
+
+
+    public function first()
+    {
+        $this->query->limit(1);
+        return $this;
+    }
+
+
+    public function find($value, $field = "id")
+    {
+        $this->where($field, $value);
+
+        $this->query->limit(1);
+        return $this;
+    }
+
+    public function get()
+    {
+        return $this;
     }
 }

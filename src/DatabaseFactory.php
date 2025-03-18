@@ -11,12 +11,12 @@ class DatabaseFactory
      */
     public static function create(\PDO $pdo, string $driver_type = null): Database
     {
-        if($driver_type === null){
+        if ($driver_type === null) {
             $driver_type = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
         }
         $driver_type = strtolower($driver_type);
 
-        switch ($driver_type){
+        switch ($driver_type) {
             case "mysql":
                 $factory = new \Latitude\QueryBuilder\QueryFactory(new \Latitude\QueryBuilder\Engine\MySqlEngine());
                 break;
@@ -35,7 +35,7 @@ class DatabaseFactory
         }
         $connection = new Connection($pdo);
         $queryFactory = new QueryFactory($factory);
-        $queryFactory->setConnection($connection);
+
         return new Database($connection, $queryFactory);
     }
 }

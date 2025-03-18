@@ -9,8 +9,6 @@ use Latitude\QueryBuilder\Query\Capability\HasOrderBy;
  */
 trait HasOrderTrait
 {
-
-
     public function orderBy($field, $type = "asc"): self
     {
         $this->query->orderBy($field, $type);

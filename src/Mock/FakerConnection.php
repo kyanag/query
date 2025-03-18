@@ -7,7 +7,6 @@ use Kyanag\Query\Interfaces\ConnectionInterface;
 
 class FakerConnection extends Connection
 {
-
     protected array $queries = [];
 
 

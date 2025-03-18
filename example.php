@@ -9,9 +9,9 @@ include "./vendor/autoload.php";
 
 //Mock
 $factory = new \Latitude\QueryBuilder\QueryFactory(new \Latitude\QueryBuilder\Engine\MySqlEngine());
-$connection = new \Kyanag\Query\Mock\FakerConnection();
 $queryFactory = new \Kyanag\Query\QueryFactory($factory);
-$queryFactory->setConnection($connection);
+
+$connection = new \Kyanag\Query\Mock\FakerConnection();
 $database = new \Kyanag\Query\Database($connection, $queryFactory);
 
 /**

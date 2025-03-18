@@ -7,7 +7,6 @@ use Latitude\QueryBuilder\CriteriaInterface;
 
 class WhereQuery
 {
-
     use HasWhereTrait;
 
     /**
@@ -18,12 +17,12 @@ class WhereQuery
 
     public function addCondition(CriteriaInterface $condition, $type = "and"): self
     {
-        if($this->criteria === null){
+        if ($this->criteria === null) {
             $this->criteria = $condition;
-        }else{
-            if($type == "and"){
+        } else {
+            if ($type == "and") {
                 $this->criteria = $this->criteria->and($condition);
-            }else{
+            } else {
                 $this->criteria = $this->criteria->or($condition);
             }
         }

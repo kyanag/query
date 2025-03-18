@@ -4,6 +4,7 @@ namespace Kyanag\Query;
 
 use Kyanag\Query\Interfaces\ConnectionInterface;
 use Latitude\QueryBuilder\Engine\MySqlEngine;
+
 use function Latitude\QueryBuilder\literal;
 
 /**
@@ -18,8 +19,6 @@ use function Latitude\QueryBuilder\literal;
  */
 class Database
 {
-
-
     /**
      * @var QueryFactory
      */
@@ -75,5 +74,11 @@ class Database
     public function __call($method, $params = [])
     {
         return $this->connection->{$method}(...$params);
+    }
+
+
+    public function table(string $table): QueryProxy
+    {
+        return $this->query()->table($table);
     }
 }

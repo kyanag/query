@@ -10,6 +10,7 @@ use Latitude\QueryBuilder\CriteriaInterface;
 use Latitude\QueryBuilder\EngineInterface;
 use Latitude\QueryBuilder\Query\Capability\HasFrom;
 use Latitude\QueryBuilder\StatementInterface;
+
 use function Latitude\QueryBuilder\criteria;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\group;
@@ -20,7 +21,6 @@ use function Latitude\QueryBuilder\identify;
  */
 trait HasWhereTrait
 {
-
     /**
      * @param string|StatementInterface|\Closure $field
      * @param string|null|StatementInterface $operator
@@ -30,41 +30,41 @@ trait HasWhereTrait
      */
     public function where($field, $operator = null, $value = null, $type = "and"): self
     {
-        if($field instanceof \Closure){
+        if ($field instanceof \Closure) {
             $criteria = new WhereQuery();
             $res = call_user_func($field, $criteria);
-            if($res !== null){
+            if ($res !== null) {
                 $criteria = $res;
             }
-            if(!$criteria->isEmpty()){
+            if (!$criteria->isEmpty()) {
                 $criteria = group($criteria->toQuery());
                 $this->addCondition($criteria, $type);
             }
             return $this;
         }
-        if($operator === null && $value === null){
+        if ($operator === null && $value === null) {
             $value = null;
             $operator = "=";
-        }else if($value === null){
+        } elseif ($value === null) {
             $value = $operator;
             $operator = "=";
         }
         $operator = strtolower($operator);
-        switch ($operator){
+        switch ($operator) {
             case "=":
             case "eq":
-                if($value === null){
+                if ($value === null) {
                     $this->addCondition(field($field)->isNull(), $type);
-                }else{
+                } else {
                     $this->addCondition(field($field)->eq($value), $type);
                 }
                 break;
             case "neq":
             case "!=":
             case "<>":
-                if($value === null){
+                if ($value === null) {
                     $this->addCondition(field($field)->isNotNull(), $type);
-                }else{
+                } else {
                     $this->addCondition(field($field)->notEq($value), $type);
                 }
                 break;
@@ -155,9 +155,9 @@ trait HasWhereTrait
      */
     public function whereIn($field, $values): self
     {
-        if($values instanceof \Closure){
+        if ($values instanceof \Closure) {
             $values = call_user_func($values);
-            if(!is_array($values)){
+            if (!is_array($values)) {
                 return $this->whereInQuery($field, $values);
             }
         }
@@ -173,9 +173,9 @@ trait HasWhereTrait
      */
     public function whereNotIn($field, $values): self
     {
-        if($values instanceof \Closure){
+        if ($values instanceof \Closure) {
             $values = call_user_func($values);
-            if(!is_array($values)){
+            if (!is_array($values)) {
                 return $this->whereNotInQuery($field, $values);
             }
         }
@@ -192,10 +192,10 @@ trait HasWhereTrait
      */
     protected function whereInQuery($field, $query): self
     {
-        if($query instanceof Select){
-            $query = $query->asQuery();
+        if ($query instanceof Select) {
+            $query = $query->toQuery();
         }
-        if(!$query instanceof StatementInterface){
+        if (!$query instanceof StatementInterface) {
             throw new \Exception("WhereIn 子句查询请调用 asQuery 方法");
         }
         $this->addCondition(
@@ -212,10 +212,10 @@ trait HasWhereTrait
      */
     protected function whereNotInQuery($field, $query): self
     {
-        if($query instanceof Select){
-            $query = $query->asQuery();
+        if ($query instanceof Select) {
+            $query = $query->toQuery();
         }
-        if(!$query instanceof StatementInterface){
+        if (!$query instanceof StatementInterface) {
             throw new \Exception("WhereIn 子句查询请调用 asQuery 方法");
         }
         $this->addCondition(
@@ -263,13 +263,12 @@ trait HasWhereTrait
     }
 
 
-    public abstract function addCondition(CriteriaInterface $condition, $type = "and");
+    abstract public function addCondition(CriteriaInterface $condition, $type = "and");
 }
 
 
 final class Statement implements StatementInterface
 {
-
     /**
      * @var array
      */

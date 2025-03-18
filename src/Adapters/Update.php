@@ -2,15 +2,12 @@
 
 namespace Kyanag\Query\Adapters;
 
-use Kyanag\Query\Interfaces\ConnectionInterface;
 use Kyanag\Query\Adapters\Traits\HasWhereTrait;
-use Kyanag\Query\Connection;
 use Latitude\QueryBuilder\CriteriaInterface;
 use Latitude\QueryBuilder\Query\UpdateQuery;
 
 class Update extends AbstractQuery
 {
-
     use HasWhereTrait;
 
 
@@ -31,23 +28,18 @@ class Update extends AbstractQuery
     }
 
 
-    /**
-     * 执行查询
-     * @param array $values
-     * @return int
-     */
-    public function update(array $values): int
+    public function update(array $values)
     {
-        $query = $this->query->set($values)->compile();
-        return $this->connection->exec($query->sql(), $query->params()) ?: 0;
+        $this->query->set($values);
+        return $this;
     }
 
 
     public function addCondition(CriteriaInterface $condition, $type = "and")
     {
-        if($type == "and"){
+        if ($type == "and") {
             $this->query->andWhere($condition);
-        }else{
+        } else {
             $this->query->orWhere($condition);
         }
     }
