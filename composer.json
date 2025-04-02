@@ -12,6 +12,11 @@
             "./src/functions.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Kyanag\\Query\\Tests\\": "./tests"
+        }
+    },
     "require": {
         "php": ">=7.4",
         "latitude/latitude": "^4.2",

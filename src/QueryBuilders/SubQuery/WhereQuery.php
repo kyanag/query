@@ -1,8 +1,8 @@
 <?php
 
-namespace Kyanag\Query\Adapters\SubQuery;
+namespace Kyanag\Query\QueryBuilders\SubQuery;
 
-use Kyanag\Query\Adapters\Traits\HasWhereTrait;
+use Kyanag\Query\QueryBuilders\Traits\HasWhereTrait;
 use Latitude\QueryBuilder\CriteriaInterface;
 
 class WhereQuery

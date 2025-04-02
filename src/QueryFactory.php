@@ -3,10 +3,10 @@
 namespace Kyanag\Query;
 
 use Kyanag\Query\Interfaces\ConnectionInterface;
-use Kyanag\Query\Adapters\Delete;
-use Kyanag\Query\Adapters\Select;
-use Kyanag\Query\Adapters\Update;
-use Kyanag\Query\Adapters\Insert;
+use Kyanag\Query\QueryBuilders\DeleteBuilder;
+use Kyanag\Query\QueryBuilders\SelectBuilder;
+use Kyanag\Query\QueryBuilders\UpdateBuilder;
+use Kyanag\Query\QueryBuilders\InsertBuilder;
 
 class QueryFactory
 {
@@ -20,30 +20,30 @@ class QueryFactory
 
 
 
-    public function createUpdate(string $table = ""): Update
+    public function createUpdate(string $table = ""): UpdateBuilder
     {
-        return new Update($this->factory->update($table));
+        return new UpdateBuilder($this->factory->update($table));
     }
 
 
-    public function createSelect(string $table = ""): Select
+    public function createSelect(string $table = ""): SelectBuilder
     {
-        $select = new Select($this->factory->select());
-        if($table){
+        $select = new SelectBuilder($this->factory->select());
+        if ($table) {
             $select->table($table);
         }
         return $select;
     }
 
 
-    public function createInsert(string $table = ""): Insert
+    public function createInsert(string $table = ""): InsertBuilder
     {
-        return new Insert($this->factory->insert($table));
+        return new InsertBuilder($this->factory->insert($table));
     }
 
 
-    public function createDelete(string $table = ""): Delete
+    public function createDelete(string $table = ""): DeleteBuilder
     {
-        return new Delete($this->factory->delete($table));
+        return new DeleteBuilder($this->factory->delete($table));
     }
 }

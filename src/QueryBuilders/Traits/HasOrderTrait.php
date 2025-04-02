@@ -1,6 +1,6 @@
 <?php
 
-namespace Kyanag\Query\Adapters\Traits;
+namespace Kyanag\Query\QueryBuilders\Traits;
 
 use Latitude\QueryBuilder\Query\Capability\HasOrderBy;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Kyanag\Query\Adapters;
+namespace Kyanag\Query\QueryBuilders;
 
 use Latitude\QueryBuilder\Query\InsertQuery;
 
-class Insert extends AbstractQuery
+class InsertBuilder extends AbstractQueryBuilder
 {
     protected InsertQuery $query;
 

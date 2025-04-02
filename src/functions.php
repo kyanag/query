@@ -23,3 +23,25 @@ if (!function_exists("array_first")) {
         return null;
     }
 }
+
+
+if (!function_exists("array_group")) {
+    function array_group(array $items, $keyGetter): array
+    {
+        if (is_string($keyGetter)) {
+            $keyGetter = function ($item) use ($keyGetter) {
+                return $item[$keyGetter];
+            };
+        }
+
+        $res = [];
+        foreach ($items as $index => $item) {
+            $key = call_user_func($keyGetter, $item, $index);
+            if (!isset($res[$key])) {
+                $res[$key] = [];
+            }
+            $res[$key][] = $item;
+        }
+        return $res;
+    }
+}

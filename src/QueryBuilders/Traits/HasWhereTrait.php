@@ -1,11 +1,11 @@
 <?php
 
-namespace Kyanag\Query\Adapters\Traits;
+namespace Kyanag\Query\QueryBuilders\Traits;
 
-use Kyanag\Query\Adapters\AbstractQuery;
-use Kyanag\Query\Adapters\Select;
-use Kyanag\Query\Adapters\SubQuery\WhereQuery;
-use Kyanag\Query\Adapters\Update;
+use Kyanag\Query\QueryBuilders\AbstractQueryBuilder;
+use Kyanag\Query\QueryBuilders\SelectBuilder;
+use Kyanag\Query\QueryBuilders\SubQuery\WhereQuery;
+use Kyanag\Query\QueryBuilders\UpdateBuilder;
 use Latitude\QueryBuilder\CriteriaInterface;
 use Latitude\QueryBuilder\EngineInterface;
 use Latitude\QueryBuilder\Query\Capability\HasFrom;
@@ -151,7 +151,7 @@ trait HasWhereTrait
     /**
      * @param $field
      * @param array|callable $values
-     * @return Update|Select|WhereQuery|HasWhereTrait
+     * @return UpdateBuilder|SelectBuilder|WhereQuery|HasWhereTrait
      */
     public function whereIn($field, $values): self
     {
@@ -169,7 +169,7 @@ trait HasWhereTrait
     /**
      * @param $field
      * @param array|callable $values
-     * @return Update|Select|WhereQuery|HasWhereTrait
+     * @return UpdateBuilder|SelectBuilder|WhereQuery|HasWhereTrait
      */
     public function whereNotIn($field, $values): self
     {
@@ -192,7 +192,7 @@ trait HasWhereTrait
      */
     protected function whereInQuery($field, $query): self
     {
-        if ($query instanceof Select) {
+        if ($query instanceof SelectBuilder) {
             $query = $query->toQuery();
         }
         if (!$query instanceof StatementInterface) {
@@ -212,7 +212,7 @@ trait HasWhereTrait
      */
     protected function whereNotInQuery($field, $query): self
     {
-        if ($query instanceof Select) {
+        if ($query instanceof SelectBuilder) {
             $query = $query->toQuery();
         }
         if (!$query instanceof StatementInterface) {

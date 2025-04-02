@@ -1,6 +1,6 @@
 <?php
 
-namespace Kyanag\Query\Adapters;
+namespace Kyanag\Query\QueryBuilders;
 
 use Kyanag\Query\Interfaces\QueryBuilderInterface;
 
@@ -9,7 +9,7 @@ use function Latitude\QueryBuilder\alias;
 /**
  * @property \Latitude\QueryBuilder\Query\AbstractQuery $query
  */
-abstract class AbstractQuery implements QueryBuilderInterface
+abstract class AbstractQueryBuilder implements QueryBuilderInterface
 {
     /**
      * @return \Latitude\QueryBuilder\Query\AbstractQuery

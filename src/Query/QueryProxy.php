@@ -1,20 +1,21 @@
 <?php
 
-namespace Kyanag\Query;
+namespace Kyanag\Query\Query;
 
-use Kyanag\Query\Adapters\Delete;
-use Kyanag\Query\Adapters\Insert;
-use Kyanag\Query\Adapters\Select;
-use Kyanag\Query\Adapters\Update;
 use Kyanag\Query\Interfaces\ConnectionInterface;
 use Kyanag\Query\Interfaces\QueryBuilderInterface;
+use Kyanag\Query\QueryBuilders\DeleteBuilder;
+use Kyanag\Query\QueryBuilders\InsertBuilder;
+use Kyanag\Query\QueryBuilders\SelectBuilder;
+use Kyanag\Query\QueryBuilders\UpdateBuilder;
+use Kyanag\Query\QueryFactory;
 use Latitude\QueryBuilder\StatementInterface;
 
 /**
- * @mixin Insert
- * @mixin Update
- * @mixin Select
- * @mixin Delete
+ * @mixin InsertBuilder
+ * @mixin UpdateBuilder
+ * @mixin SelectBuilder
+ * @mixin DeleteBuilder
  */
 class QueryProxy
 {

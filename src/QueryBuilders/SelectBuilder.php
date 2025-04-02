@@ -1,16 +1,16 @@
 <?php
 
-namespace Kyanag\Query\Adapters;
+namespace Kyanag\Query\QueryBuilders;
 
-use Kyanag\Query\Adapters\SubQuery\WhereQuery;
-use Kyanag\Query\Adapters\Traits\HasOrderTrait;
-use Kyanag\Query\Adapters\Traits\HasWhereTrait;
+use Kyanag\Query\QueryBuilders\SubQuery\WhereQuery;
+use Kyanag\Query\QueryBuilders\Traits\HasOrderTrait;
+use Kyanag\Query\QueryBuilders\Traits\HasWhereTrait;
 use Latitude\QueryBuilder\CriteriaInterface;
 use Latitude\QueryBuilder\Query\SelectQuery;
 
 use function Latitude\QueryBuilder\on;
 
-class Select extends AbstractQuery
+class SelectBuilder extends AbstractQueryBuilder
 {
     use HasWhereTrait;
     use HasOrderTrait;

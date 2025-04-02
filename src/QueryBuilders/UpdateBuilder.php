@@ -1,12 +1,12 @@
 <?php
 
-namespace Kyanag\Query\Adapters;
+namespace Kyanag\Query\QueryBuilders;
 
-use Kyanag\Query\Adapters\Traits\HasWhereTrait;
+use Kyanag\Query\QueryBuilders\Traits\HasWhereTrait;
 use Latitude\QueryBuilder\CriteriaInterface;
 use Latitude\QueryBuilder\Query\UpdateQuery;
 
-class Update extends AbstractQuery
+class UpdateBuilder extends AbstractQueryBuilder
 {
     use HasWhereTrait;
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Kyanag\Query\Adapters;
+namespace Kyanag\Query\QueryBuilders;
 
 use Kyanag\Query\Interfaces\ConnectionInterface;
-use Kyanag\Query\Adapters\Traits\HasWhereTrait;
+use Kyanag\Query\QueryBuilders\Traits\HasWhereTrait;
 use Latitude\QueryBuilder\CriteriaInterface;
 use Latitude\QueryBuilder\Query\DeleteQuery;
 use Latitude\QueryBuilder\Query\SelectQuery;
 
-class Delete extends AbstractQuery
+class DeleteBuilder extends AbstractQueryBuilder
 {
     use HasWhereTrait;
 
